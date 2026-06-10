@@ -113,7 +113,7 @@ export default function AssignSupplierModal({
       try {
 
         await api.post(
-          `/Orders/${orderId}/assign-supplier?supplierId=${supplierId}`
+          `/api/Orders/${orderId}/assign-supplier?supplierId=${supplierId}`
         );
 
         if (onAssigned) {

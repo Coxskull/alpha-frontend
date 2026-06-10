@@ -7,31 +7,21 @@ export type OrderStatus =
   | "Delivered"
   | "Cancelled";
 
-export interface Order {
-  id: number;
-
+export type Order = {
+  id: string;
   orderNumber: string;
-
   customerName: string;
-
-  supplierName?: string | null;
-
-  driverName?: string | null;
-
   pickupAddress: string;
-
   deliveryAddress: string;
-
   itemDescription: string;
+  status: string;
 
-  zone: string;
+  supplierId?: string;
+  driverId?: string;
 
-  status: OrderStatus;
-
-  createdAt: string;
-
-  updatedAt?: string;
-}
+  supplierName?: string;
+  driverName?: string;
+};
 
 export interface Driver {
   id: number;

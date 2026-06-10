@@ -6,7 +6,7 @@ import api from "@/services/api";
 
 import { Order } from "@/types/dashboard";
 
-import StatusChip from "../StatusChip";
+import StatusChip, { OrderStatus } from "../StatusChip";
 import OrderTimeline from "../orders/OrderTimeline";
 import {
   assignDriver,
@@ -19,12 +19,12 @@ export default function ActiveOrdersTable() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 const [actionLoading, setActionLoading] =
-  useState<number | null>(null);
+  useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] =
   useState<Order | null>(null);
   const fetchOrders = async () => {
     try {
-      const response = await api.get("/Orders");
+      const response = await api.get("/api/Orders");
 
       setOrders(response.data);
     } catch (error) {
@@ -60,7 +60,7 @@ const [actionLoading, setActionLoading] =
   }
 const handleAction = async (
   action: () => Promise<unknown>,
-  orderId: number
+  orderId: string
 ) => {
   try {
     setActionLoading(orderId);
@@ -90,7 +90,7 @@ const handleAction = async (
                 </h3>
 
                 <StatusChip
-                  status={order.status}
+                  status={order.status as OrderStatus}
                 />
               </div>
 

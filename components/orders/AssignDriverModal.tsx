@@ -113,7 +113,7 @@ export default function AssignDriverModal({
       try {
 
         await api.post(
-          `/Orders/${orderId}/assign-driver?driverId=${driverId}`
+          `/api/Orders/${orderId}/assign-driver?driverId=${driverId}`
         );
 
         if (onAssigned) {

@@ -16,7 +16,7 @@ export default function SuppliersPage() {
   const fetchSuppliers = async () => {
     try {
       const response = await api.get(
-        "/Suppliers"
+        "/api/Suppliers"
       );
 
       setSuppliers(response.data);

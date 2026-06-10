@@ -47,8 +47,8 @@ export default function AvailabilityBoard({
 
         const response =
           type === "suppliers"
-            ? await api.get("/Suppliers")
-            : await api.get("/Drivers");
+            ? await api.get("/api/Suppliers")
+            : await api.get("/api/Drivers");
 
         if (mounted) {
 

@@ -37,7 +37,7 @@ export default function SupplierBoard() {
   const fetchSuppliers = async () => {
     try {
       const response =
-        await api.get("/Suppliers");
+        await api.get("/api/Suppliers");
 
       setSuppliers(response.data);
     } catch (error) {
