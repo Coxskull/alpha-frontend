@@ -14,7 +14,10 @@ export type Order = {
   pickupAddress: string;
   deliveryAddress: string;
   itemDescription: string;
-  status: string;
+
+  zone: string;
+
+  status: OrderStatus;
 
   supplierId?: string;
   driverId?: string;
