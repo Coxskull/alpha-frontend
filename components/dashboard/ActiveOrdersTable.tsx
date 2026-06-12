@@ -113,7 +113,14 @@ const handleAction = async (
 };
     return (
   <div className="space-y-5">
-    <div className="flex justify-between items-center">
+    <div className="
+flex
+flex-col
+sm:flex-row
+sm:items-center
+sm:justify-between
+gap-4
+">
       <h2 className="text-2xl font-bold text-white">
         Active Orders
       </h2>
@@ -134,7 +141,13 @@ const handleAction = async (
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
             <div>
               <div className="flex items-center gap-3">
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="
+text-lg
+sm:text-xl
+font-bold
+text-white
+break-all
+">
                   {order.orderNumber}
                 </h3>
 
@@ -163,7 +176,9 @@ const handleAction = async (
           </div>
 
           {/* Content */}
-          <div className="grid grid-cols-1 xl:grid-cols-4 gap-5 mt-6">
+          <div className="grid grid-cols-1
+sm:grid-cols-2
+xl:grid-cols-4 gap-5 mt-6">
             <div className="rounded-2xl bg-[#111827] p-4 border border-white/5">
               <p className="text-xs uppercase tracking-widest text-gray-500">
                 Supplier
@@ -262,7 +277,14 @@ const handleAction = async (
   })()}
 </div>
           {/* Actions */}
-<div className="flex flex-wrap gap-3 mt-8">
+<div className="
+  grid
+  grid-cols-2
+  md:grid-cols-3
+  xl:flex
+  gap-3
+  mt-8
+">
   {/* View */}
   <button
   onClick={() =>

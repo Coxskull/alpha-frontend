@@ -44,7 +44,9 @@ export default function AnalyticsPage() {
         Analytics
       </h1>
 
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1
+sm:grid-cols-2
+xl:grid-cols-4 gap-6">
         <div className="bg-[#111827] p-6 rounded-3xl">
           <p className="text-gray-400">
             Live Orders
