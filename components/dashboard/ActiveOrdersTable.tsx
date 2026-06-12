@@ -127,7 +127,17 @@ gap-4
 
       <button
         onClick={() => setShowAddModal(true)}
-        className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-3 rounded-xl"
+        className="
+          w-full
+          xl:w-auto
+          bg-green-500
+          hover:bg-green-400
+          text-black
+          font-semibold
+          px-5
+          py-3
+          rounded-xl
+        "
       >
         + Add Order
       </button>
@@ -290,7 +300,17 @@ xl:grid-cols-4 gap-5 mt-6">
   onClick={() =>
     setSelectedOrder(order)
   }
-  className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-2.5 rounded-xl"
+  className="
+    w-full
+    xl:w-auto
+    bg-green-500
+    hover:bg-green-400
+    text-black
+    font-semibold
+    px-5
+    py-2.5
+    rounded-xl
+  "
 >
   View Details
 </button>
@@ -386,7 +406,18 @@ xl:grid-cols-4 gap-5 mt-6">
 />
 {popupMessage && (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-    <div className="bg-[#111827] border border-white/10 rounded-2xl p-6 w-full max-w-md">
+    <div
+  className="
+    bg-[#111827]
+    border
+    border-white/10
+    rounded-2xl
+    p-6
+    w-full
+    max-w-md
+    mx-4
+  "
+>
       <h3 className="text-xl font-bold text-white mb-3">
         Assignment Failed
       </h3>
@@ -400,7 +431,16 @@ xl:grid-cols-4 gap-5 mt-6">
           onClick={() =>
             setPopupMessage(null)
           }
-          className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-2 rounded-xl"
+          className="
+w-full
+xl:w-auto
+bg-green-500
+hover:bg-green-400
+text-black
+font-semibold
+px-5
+py-2.5
+rounded-xl"
         >
           OK
         </button>

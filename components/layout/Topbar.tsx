@@ -4,26 +4,79 @@ import {
   Bell,
   Search,
   Globe,
+  Menu,
 } from "lucide-react";
 
-export default function Topbar() {
+type Props = {
+  onMenuClick?: () => void;
+};
+
+export default function Topbar({
+  onMenuClick,
+}: Props) {
   return (
     <header className="sticky top-0 z-40 h-[80px] bg-[#111827]/95 backdrop-blur-xl border-b border-white/5">
-      <div className="h-full px-8 flex items-center justify-between">
+      <div
+        className="
+          h-full
+          px-4
+          md:px-6
+          lg:px-8
+          flex
+          items-center
+          justify-between
+        "
+      >
         {/* Left */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
+          {/* Mobile Menu */}
+          <button
+            onClick={onMenuClick}
+            className="
+              lg:hidden
+              h-10
+              w-10
+              rounded-xl
+              bg-[#1F2937]
+              border
+              border-white/5
+              flex
+              items-center
+              justify-center
+              text-white
+            "
+          >
+            <Menu size={20} />
+          </button>
+
           <div>
-            <h2 className="text-2xl font-bold text-white">
+            <h2
+              className="
+                text-lg
+                sm:text-xl
+                lg:text-2xl
+                font-bold
+                text-white
+              "
+            >
               Alpha Mission Control
             </h2>
 
-            <p className="text-sm text-gray-400 mt-1">
+            <p
+              className="
+                hidden
+                md:block
+                text-sm
+                text-gray-400
+                mt-1
+              "
+            >
               Real-time logistics dispatch and operations
             </p>
           </div>
         </div>
 
-        {/* Center Search */}
+        {/* Search */}
         <div className="hidden lg:flex items-center w-[420px]">
           <div className="relative w-full">
             <Search
@@ -40,10 +93,13 @@ export default function Topbar() {
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Environment */}
           <div className="hidden md:flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-xl">
-            <Globe size={16} className="text-green-400" />
+            <Globe
+              size={16}
+              className="text-green-400"
+            />
 
             <span className="text-sm font-medium text-green-400">
               LIVE
