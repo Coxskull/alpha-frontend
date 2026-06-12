@@ -1,11 +1,10 @@
 export type OrderStatus =
-  | "Pending"
-  | "Supplier Assigned"
-  | "Driver Assigned"
-  | "Picked Up"
-  | "En Route"
-  | "Delivered"
-  | "Cancelled";
+  | "pending"
+  | "supplier_assigned"
+  | "driver_assigned"
+  | "picked_up"
+  | "en_route"
+  | "delivered";
 
 export type Order = {
   id: string;
