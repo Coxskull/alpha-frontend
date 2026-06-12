@@ -143,16 +143,34 @@ const openDriverModal = async (
 const openSupplierModal = async (
   orderId: string
 ) => {
-  const response =
-    await api.get(
-      "/api/Suppliers/available"
+  try {
+    console.log("Opening supplier modal");
+
+    const response =
+      await api.get(
+        "/api/Suppliers/available"
+      );
+
+    console.log(
+      "Suppliers:",
+      response.data
     );
 
-  setSuppliers(response.data);
+    setSuppliers(response.data);
 
-  setSelectedOrderId(orderId);
+    setSelectedOrderId(orderId);
 
-  setSupplierModalOpen(true);
+    setSupplierModalOpen(true);
+  } catch (error) {
+    console.error(
+      "Supplier API failed:",
+      error
+    );
+
+    setPopupMessage(
+      "Unable to load suppliers."
+    );
+  }
 };
 
 const assignSelectedDriver = async (
