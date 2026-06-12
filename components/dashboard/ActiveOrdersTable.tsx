@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import OrderDetailsModal from "../orders/OrderDetailsModal";
 import api from "@/services/api";
-
+import AddOrderModal from "../orders/AddOrderModal";
 import { Order } from "@/types/dashboard";
 
 import StatusChip, { OrderStatus } from "../StatusChip";
@@ -18,6 +18,7 @@ import {
 export default function ActiveOrdersTable() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
 const [actionLoading, setActionLoading] =
   useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] =
@@ -74,8 +75,20 @@ const handleAction = async (
     setActionLoading(null);
   }
 };
-  return (
-    <div className="space-y-5">
+    return (
+  <div className="space-y-5">
+    <div className="flex justify-between items-center">
+      <h2 className="text-2xl font-bold text-white">
+        Active Orders
+      </h2>
+
+      <button
+        onClick={() => setShowAddModal(true)}
+        className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-3 rounded-xl"
+      >
+        + Add Order
+      </button>
+    </div>
       {orders.map((order) => (
         <div
           key={order.id}
@@ -314,6 +327,11 @@ const handleAction = async (
   onClose={() =>
     setSelectedOrder(null)
   }
+/>
+<AddOrderModal
+  open={showAddModal}
+  onClose={() => setShowAddModal(false)}
+  onCreated={fetchOrders}
 />
     </div>
   );
