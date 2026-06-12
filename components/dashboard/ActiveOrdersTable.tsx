@@ -72,42 +72,44 @@ const handleAction = async (
 
     await fetchOrders();
   } catch (error: unknown) {
-  console.error(error);
+    console.error(error);
 
-  const axiosError = error as {
-    response?: {
-      data?: string | { message?: string };
+    const axiosError = error as {
+      response?: {
+        data?: string | { message?: string };
+      };
+      message?: string;
     };
-    message?: string;
-  };
 
-  const errorMessage =
-    typeof axiosError.response?.data === "string"
-      ? axiosError.response.data
-      : axiosError.response?.data?.message ||
-        axiosError.message ||
-        "Action failed";
+    const errorMessage =
+      typeof axiosError.response?.data === "string"
+        ? axiosError.response.data
+        : axiosError.response?.data?.message ||
+          axiosError.message ||
+          "Action failed";
 
-  if (
-    errorMessage.includes(
-      "No available drivers"
-    )
-  ) {
-    setPopupMessage(
-      "🚚 No drivers are currently available."
-    );
-  } else if (
-    errorMessage.includes(
-      "No available suppliers"
-    )
-  ) {
-    setPopupMessage(
-      "🏭 No suppliers are currently available."
-    );
-  } else {
-    setPopupMessage(errorMessage);
+    if (
+      errorMessage.includes(
+        "No available drivers"
+      )
+    ) {
+      setPopupMessage(
+        "🚚 No drivers are currently available."
+      );
+    } else if (
+      errorMessage.includes(
+        "No available suppliers"
+      )
+    ) {
+      setPopupMessage(
+        "🏭 No suppliers are currently available."
+      );
+    } else {
+      setPopupMessage(errorMessage);
+    }
+  } finally {
+    setActionLoading(null);
   }
-}
 };
     return (
   <div className="space-y-5">
