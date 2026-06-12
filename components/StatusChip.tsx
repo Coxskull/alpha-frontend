@@ -1,10 +1,10 @@
 export type OrderStatus =
   | "Pending"
-  | "Supplier Assigned"
-  | "Driver Assigned"
-  | "Picked Up"
-  | "En Route"
-  | "Delivered"
+  | "supplier_assigned"
+  | "driver_assigned"
+  | "picked_up"
+  | "en_route"
+  | "delivered"
   | "Cancelled";
 
 type Props = {
@@ -19,19 +19,19 @@ export default function StatusChip({ status }: Props) {
     Pending:
       "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
 
-    "Supplier Assigned":
+    "supplier_assigned":
       "bg-blue-500/10 text-blue-400 border-blue-500/20",
 
-    "Driver Assigned":
+    "driver_assigned":
       "bg-purple-500/10 text-purple-400 border-purple-500/20",
 
-    "Picked Up":
+    "picked_up":
       "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
 
-    "En Route":
+    "en_route":
       "bg-orange-500/10 text-orange-400 border-orange-500/20",
 
-    Delivered:
+    delivered:
       "bg-green-500/10 text-green-400 border-green-500/20",
 
     Cancelled:

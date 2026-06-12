@@ -77,7 +77,7 @@ export default function AnalyticsPage() {
 
         <div className="bg-[#111827] p-6 rounded-3xl">
           <p className="text-gray-400">
-            Delivered Today
+            delivered Today
           </p>
 
           <h2 className="text-4xl text-white font-bold mt-3">

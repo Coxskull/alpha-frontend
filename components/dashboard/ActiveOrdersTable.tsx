@@ -174,63 +174,52 @@ const handleAction = async (
           {/* Timeline */}
           <div className="mt-8">
             <OrderTimeline
-              steps={[
-                {
-                  label: "Pending",
-                  completed: true,
-                },
-                {
-                  label: "Supplier",
-                  completed:
-  order.status ===
-    "Supplier Assigned" ||
-  order.status ===
-    "Driver Assigned" ||
-  order.status ===
-    "Picked Up" ||
-  order.status ===
-    "En Route" ||
-  order.status ===
-    "Delivered",
-                },
-                {
-                  label: "Driver",
-                  completed:
-                    order.status ===
-                      "Driver Assigned" ||
-                    order.status ===
-                      "Picked Up" ||
-                    order.status ===
-                      "En Route" ||
-                    order.status ===
-                      "Delivered",
-                },
-                {
-                  label: "Pickup",
-                  completed:
-                    order.status ===
-                      "Picked Up" ||
-                    order.status ===
-                      "En Route" ||
-                    order.status ===
-                      "Delivered",
-                },
-                {
-                  label: "En Route",
-                  completed:
-                    order.status ===
-                      "En Route" ||
-                    order.status ===
-                      "Delivered",
-                },
-                {
-                  label: "Delivered",
-                  completed:
-                    order.status ===
-                    "Delivered",
-                },
-              ]}
-            />
+  steps={[
+    {
+      label: "Pending",
+      completed: true,
+    },
+    {
+      label: "Supplier",
+      completed: [
+        "supplier_assigned",
+        "driver_assigned",
+        "picked_up",
+        "en_route",
+        "delivered",
+      ].includes(order.status),
+    },
+    {
+      label: "Driver",
+      completed: [
+        "driver_assigned",
+        "picked_up",
+        "en_route",
+        "delivered",
+      ].includes(order.status),
+    },
+    {
+      label: "Pickup",
+      completed: [
+        "picked_up",
+        "en_route",
+        "delivered",
+      ].includes(order.status),
+    },
+    {
+      label: "en_route",
+      completed: [
+        "en_route",
+        "delivered",
+      ].includes(order.status),
+    },
+    {
+      label: "delivered",
+      completed:
+        order.status === "delivered",
+    },
+  ]}
+/>
           </div>
           {/* Actions */}
 <div className="flex flex-wrap gap-3 mt-8">
@@ -277,7 +266,7 @@ const handleAction = async (
       : "Assign Supplier"}
   </button>
 
-  {/* Picked Up */}
+  {/* picked_up */}
   <button
     onClick={() =>
       handleAction(
@@ -288,10 +277,10 @@ const handleAction = async (
     disabled={actionLoading === order.id}
     className="bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-400 px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
   >
-    Picked Up
+    picked_up
   </button>
 
-  {/* En Route */}
+  {/* en_route */}
   <button
     onClick={() =>
       handleAction(
@@ -302,10 +291,10 @@ const handleAction = async (
     disabled={actionLoading === order.id}
     className="bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 text-orange-400 px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
   >
-    En Route
+    en_route
   </button>
 
-  {/* Delivered */}
+  {/* delivered */}
   <button
     onClick={() =>
       handleAction(
@@ -316,7 +305,7 @@ const handleAction = async (
     disabled={actionLoading === order.id}
     className="bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 text-green-400 px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
   >
-    Delivered
+    delivered
   </button>
 </div>
         </div>
