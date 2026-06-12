@@ -62,3 +62,11 @@ export interface DashboardStats {
 
   deliveredToday: number;
 }
+
+export interface TimelineEvent {
+  id: string;
+  orderId: string;
+  status: string;
+  notes?: string;
+  createdAt: string;
+}

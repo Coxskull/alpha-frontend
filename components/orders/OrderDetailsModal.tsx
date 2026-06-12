@@ -1,6 +1,12 @@
 "use client";
 
-import { Order } from "@/types/dashboard";
+import { useEffect, useState } from "react";
+import api from "@/services/api";
+
+import {
+  Order,
+  TimelineEvent,
+} from "@/types/dashboard";
 
 type Props = {
   open: boolean;
@@ -8,11 +14,53 @@ type Props = {
   order: Order | null;
 };
 
+const statusLabels: Record<string, string> = {
+  pending: "Request Created",
+  supplier_assigned: "Supplier Assigned",
+  driver_assigned: "Driver Assigned",
+  picked_up: "Picked Up",
+  en_route: "En Route",
+  delivered: "Delivered",
+  proof_uploaded: "Delivery Proof Uploaded",
+};
+
 export default function OrderDetailsModal({
   open,
   onClose,
   order,
 }: Props) {
+  const [timeline, setTimeline] = useState<
+    TimelineEvent[]
+  >([]);
+
+  const [loadingTimeline, setLoadingTimeline] =
+    useState(false);
+
+  useEffect(() => {
+    if (!order) return;
+
+    const loadTimeline = async () => {
+      try {
+        setLoadingTimeline(true);
+
+        const response = await api.get(
+          `/api/StatusHistory/${order.id}`
+        );
+
+        setTimeline(response.data);
+      } catch (error) {
+        console.error(
+          "Failed loading timeline",
+          error
+        );
+      } finally {
+        setLoadingTimeline(false);
+      }
+    };
+
+    loadTimeline();
+  }, [order]);
+
   if (!open || !order) return null;
 
   return (
@@ -51,22 +99,18 @@ export default function OrderDetailsModal({
           </button>
         </div>
 
-        {/* Details Grid */}
+        {/* Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-          {/* Customer */}
           <InfoCard
             label="Customer Information"
             value={order.customerName}
           />
 
-          {/* Status */}
           <InfoCard
             label="Current Status"
             value={order.status}
           />
 
-          {/* Supplier */}
           <InfoCard
             label="Assigned Supplier"
             value={
@@ -75,7 +119,6 @@ export default function OrderDetailsModal({
             }
           />
 
-          {/* Driver */}
           <InfoCard
             label="Assigned Driver"
             value={
@@ -84,31 +127,26 @@ export default function OrderDetailsModal({
             }
           />
 
-          {/* Pickup */}
           <InfoCard
             label="Pickup Address"
             value={order.pickupAddress}
           />
 
-          {/* Delivery */}
           <InfoCard
             label="Delivery Address"
             value={order.deliveryAddress}
           />
 
-          {/* Request Type */}
           <InfoCard
             label="Request Type"
             value={order.itemDescription}
           />
 
-          {/* Zone */}
           <InfoCard
             label="Territory / Zone"
             value={order.zone}
           />
 
-          {/* Created */}
           <InfoCard
             label="Created Time"
             value={
@@ -120,7 +158,6 @@ export default function OrderDetailsModal({
             }
           />
 
-          {/* Updated */}
           <InfoCard
             label="Last Updated"
             value={
@@ -133,7 +170,7 @@ export default function OrderDetailsModal({
           />
         </div>
 
-        {/* Notes / Description */}
+        {/* Description */}
         <div className="mt-6 rounded-2xl bg-[#0B0F14] border border-white/5 p-5">
           <p className="text-gray-400 text-sm mb-2">
             Request Description
@@ -144,19 +181,57 @@ export default function OrderDetailsModal({
           </p>
         </div>
 
-       <div>
-  <p className="text-gray-500">Created</p>
-  <p className="text-white">
-    {new Date(order.createdAt ?? "").toLocaleString()}
-  </p>
-</div>
+        {/* Timeline */}
+        <div className="mt-6 rounded-2xl bg-[#0B0F14] border border-white/5 p-5">
+          <h3 className="text-white font-semibold text-lg mb-5">
+            Activity Timeline
+          </h3>
 
-<div>
-  <p className="text-gray-500">Updated</p>
-  <p className="text-white">
-    {new Date(order.updatedAt ?? "").toLocaleString()}
-  </p>
-</div>
+          {loadingTimeline ? (
+            <p className="text-gray-400">
+              Loading timeline...
+            </p>
+          ) : timeline.length === 0 ? (
+            <p className="text-gray-400">
+              No timeline records found.
+            </p>
+          ) : (
+            <div className="space-y-5">
+              {timeline.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex gap-4"
+                >
+                  <div className="flex flex-col items-center">
+                    <div className="h-3 w-3 rounded-full bg-green-400" />
+
+                    <div className="w-[2px] flex-1 bg-white/10 mt-1" />
+                  </div>
+
+                  <div>
+                    <p className="text-white font-medium">
+                      {statusLabels[
+                        item.status
+                      ] || item.status}
+                    </p>
+
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(
+                        item.createdAt
+                      ).toLocaleString()}
+                    </p>
+
+                    {item.notes && (
+                      <p className="text-sm text-gray-500 mt-2">
+                        {item.notes}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
