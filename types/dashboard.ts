@@ -27,19 +27,12 @@ export type Order = {
 
 export interface Driver {
   id: string;
-
   fullName: string;
-
   vehicleType?: string;
-
   phoneNumber?: string;
-
   status?: string;
-
   availability?: string;
-
   territory?: string;
-
   activeJobs?: number;
 }
 
