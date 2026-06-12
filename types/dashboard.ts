@@ -10,8 +10,10 @@ export type Order = {
   id: string;
   orderNumber: string;
   customerName: string;
+
   pickupAddress: string;
   deliveryAddress: string;
+
   itemDescription: string;
 
   zone: string;
@@ -23,6 +25,9 @@ export type Order = {
 
   supplierName?: string;
   driverName?: string;
+
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export interface Driver {
