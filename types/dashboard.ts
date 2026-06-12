@@ -30,11 +30,17 @@ export interface Driver {
 
   fullName: string;
 
-  availability: string;
+  vehicleType?: string;
 
-  territory: string;
+  phoneNumber?: string;
 
-  activeJobs: number;
+  status?: string;
+
+  availability?: string;
+
+  territory?: string;
+
+  activeJobs?: number;
 }
 
 export interface Supplier {
