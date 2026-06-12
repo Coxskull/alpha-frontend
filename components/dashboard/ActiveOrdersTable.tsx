@@ -25,7 +25,11 @@ export default function ActiveOrdersTable() {
 
 const [supplierModalOpen, setSupplierModalOpen] =
   useState(false);
+const [searchTerm, setSearchTerm] =
+  useState("");
 
+const [statusFilter, setStatusFilter] =
+  useState("all");
 const [selectedOrderId, setSelectedOrderId] =
   useState<string | null>(null);
 
@@ -196,42 +200,206 @@ const assignSelectedSupplier = async (
 
   fetchOrders();
 };
-    return (
-  <div className="space-y-5">
-    <div className="
-flex
-flex-col
-sm:flex-row
-sm:items-center
-sm:justify-between
-gap-4
-">
-      <h2 className="text-2xl font-bold text-white">
-        Active Orders
-      </h2>
 
-      <button
-        onClick={() => setShowAddModal(true)}
+const filteredOrders = orders.filter(
+  (order) => {
+    const search =
+      searchTerm.toLowerCase();
+
+    const matchesSearch = [
+  order.orderNumber,
+  order.customerName,
+  order.supplierName ?? "",
+  order.driverName ?? "",
+]
+  .join(" ")
+  .toLowerCase()
+  .includes(search);
+
+    const matchesStatus =
+      statusFilter === "all"
+        ? true
+        : order.status ===
+          statusFilter;
+
+    return (
+      matchesSearch &&
+      matchesStatus
+    );
+  }
+);
+   return (
+  <div className="space-y-5">
+
+    {/* Header */}
+    <div className="space-y-4">
+
+      <div
         className="
-          w-full
-          xl:w-auto
-          bg-green-500
-          hover:bg-green-400
-          text-black
-          font-semibold
-          px-5
-          py-3
-          rounded-xl
+          flex
+          flex-col
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+          gap-4
         "
       >
-        + Add Order
-      </button>
-    </div>
-      {orders.map((order) => (
-        <div
-          key={order.id}
-          className="rounded-3xl border border-white/5 bg-[#0B0F14] p-6 hover:border-green-500/20 transition-all"
+        <h2 className="text-2xl font-bold text-white">
+          Active Orders
+        </h2>
+
+        <button
+          onClick={() =>
+            setShowAddModal(true)
+          }
+          className="
+            w-full
+            sm:w-auto
+            bg-green-500
+            hover:bg-green-400
+            text-black
+            font-semibold
+            px-5
+            py-3
+            rounded-xl
+          "
         >
+          + Add Order
+        </button>
+      </div>
+
+      {/* Search + Filter */}
+      <div className="flex flex-col lg:flex-row gap-4">
+
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) =>
+            setSearchTerm(
+              e.target.value
+            )
+          }
+          placeholder="Search Order ID, Customer, Supplier, Driver..."
+          className="
+            flex-1
+            bg-[#111827]
+            border
+            border-white/10
+            rounded-2xl
+            px-4
+            py-3
+            text-white
+            placeholder:text-gray-500
+            outline-none
+            focus:border-green-500
+          "
+        />
+
+        <select
+          value={statusFilter}
+          onChange={(e) =>
+            setStatusFilter(
+              e.target.value
+            )
+          }
+          className="
+            bg-[#111827]
+            border
+            border-white/10
+            rounded-2xl
+            px-4
+            py-3
+            text-white
+          "
+        >
+          <option value="all">
+            All Statuses
+          </option>
+
+          <option value="pending">
+            Pending
+          </option>
+
+          <option value="supplier_assigned">
+            Supplier Assigned
+          </option>
+
+          <option value="driver_assigned">
+            Driver Assigned
+          </option>
+
+          <option value="picked_up">
+            Picked Up
+          </option>
+
+          <option value="en_route">
+            En Route
+          </option>
+
+          <option value="delivered">
+            Delivered
+          </option>
+        </select>
+
+      </div>
+
+      <p className="text-sm text-gray-400">
+        Showing
+        <span className="mx-1 text-white font-semibold">
+          {filteredOrders.length}
+        </span>
+        requests
+      </p>
+
+    </div>
+
+    {/* Empty State */}
+    {filteredOrders.length === 0 && (
+      <div
+        className="
+          rounded-3xl
+          border
+          border-white/10
+          bg-[#111827]
+          p-10
+          text-center
+        "
+      >
+        <p className="text-gray-400">
+          No matching requests found.
+        </p>
+      </div>
+    )}
+{filteredOrders.length === 0 && (
+  <div
+    className="
+      rounded-3xl
+      border
+      border-white/10
+      bg-[#111827]
+      p-10
+      text-center
+    "
+  >
+    <p className="text-gray-400">
+      No matching requests found.
+    </p>
+  </div>
+)}
+
+{filteredOrders.map((order) => (
+  <div
+    key={order.id}
+    className="
+      rounded-3xl
+      border
+      border-white/5
+      bg-[#0B0F14]
+      p-6
+      hover:border-green-500/20
+      transition-all
+    "
+  >
           {/* Header */}
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
             <div>
