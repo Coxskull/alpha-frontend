@@ -80,7 +80,7 @@ export default function SupplierBoard() {
 
               <div>
                 <h3 className="text-lg font-semibold text-white">
-                  {supplier.businessName}
+                  {supplier.name}
                 </h3>
 
                 <p className="text-gray-400 text-sm mt-1">
@@ -90,9 +90,9 @@ export default function SupplierBoard() {
             </div>
 
             <div
-              className={`px-3 py-1.5 rounded-full border text-xs font-semibold ${statusStyles[supplier.status]}`}
+              className={`px-3 py-1.5 rounded-full border text-xs font-semibold ${statusStyles[supplier.availability]}`}
             >
-              {supplier.status}
+              {supplier.availability}
             </div>
           </div>
         </div>
