@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import OrderDetailsModal from "../orders/OrderDetailsModal";
 import api from "@/services/api";
 import AddOrderModal from "../orders/AddOrderModal";
-import { Order } from "@/types/dashboard";
-
+import { Driver, Order, Supplier } from "@/types/dashboard";
+import AssignDriverModal from "../orders/AssignDriverModal";
+import AssignSupplierModal from "../orders/AssignSupplierModal";
 import StatusChip, { OrderStatus } from "../StatusChip";
 import OrderTimeline from "../orders/OrderTimeline";
 import {
-  assignDriver,
-  assignSupplier,
   markPickedUp,
   markEnRoute,
   markDelivered,
@@ -21,6 +20,20 @@ export default function ActiveOrdersTable() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [popupMessage, setPopupMessage] =
   useState<string | null>(null);
+  const [driverModalOpen, setDriverModalOpen] =
+  useState(false);
+
+const [supplierModalOpen, setSupplierModalOpen] =
+  useState(false);
+
+const [selectedOrderId, setSelectedOrderId] =
+  useState<string | null>(null);
+
+const [drivers, setDrivers] =
+  useState<Driver[]>([]);
+
+const [suppliers, setSuppliers] =
+  useState<Supplier[]>([]);
 const [actionLoading, setActionLoading] =
   useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] =
@@ -110,6 +123,60 @@ const handleAction = async (
   } finally {
     setActionLoading(null);
   }
+};
+
+const openDriverModal = async (
+  orderId: string
+) => {
+  const response =
+    await api.get(
+      "/api/Drivers/available"
+    );
+
+  setDrivers(response.data);
+
+  setSelectedOrderId(orderId);
+
+  setDriverModalOpen(true);
+};
+
+const openSupplierModal = async (
+  orderId: string
+) => {
+  const response =
+    await api.get(
+      "/api/Suppliers/available"
+    );
+
+  setSuppliers(response.data);
+
+  setSelectedOrderId(orderId);
+
+  setSupplierModalOpen(true);
+};
+
+const assignSelectedDriver = async (
+  driverId: string
+) => {
+  await api.post(
+    `/api/Orders/${selectedOrderId}/assign-driver/${driverId}`
+  );
+
+  setDriverModalOpen(false);
+
+  fetchOrders();
+};
+
+const assignSelectedSupplier = async (
+  supplierId: string
+) => {
+  await api.post(
+    `/api/Orders/${selectedOrderId}/assign-supplier/${supplierId}`
+  );
+
+  setSupplierModalOpen(false);
+
+  fetchOrders();
 };
     return (
   <div className="space-y-5">
@@ -317,12 +384,9 @@ xl:grid-cols-4 gap-5 mt-6">
 
   {/* Assign Driver */}
   <button
-    onClick={() =>
-      handleAction(
-        () => assignDriver(order.id),
-        order.id
-      )
-    }
+   onClick={() =>
+  openDriverModal(order.id)
+}
     disabled={
   actionLoading === order.id ||
   order.status !== "supplier_assigned"
@@ -344,12 +408,8 @@ ${
   {/* Assign Supplier */}
   <button
     onClick={() =>
-      handleAction(
-        () =>
-          assignSupplier(order.id),
-        order.id
-      )
-    }
+  openSupplierModal(order.id)
+}
     disabled={
   actionLoading === order.id ||
   order.status !== "pending"
@@ -442,6 +502,19 @@ ${
 </div>
         </div>
       ))}
+      <AssignDriverModal
+  open={driverModalOpen}
+  drivers={drivers}
+  onClose={() => setDriverModalOpen(false)}
+  onAssign={assignSelectedDriver}
+/>
+
+<AssignSupplierModal
+  open={supplierModalOpen}
+  suppliers={suppliers}
+  onClose={() => setSupplierModalOpen(false)}
+  onAssign={assignSelectedSupplier}
+/>
       <OrderDetailsModal
   open={selectedOrder !== null}
   order={selectedOrder}
@@ -498,6 +571,7 @@ rounded-xl"
     </div>
   </div>
 )}
+
     </div>
   );
 }

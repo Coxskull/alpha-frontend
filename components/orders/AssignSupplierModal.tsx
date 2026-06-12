@@ -1,349 +1,113 @@
 "use client";
 
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Box,
-  Typography,
-  Chip,
-  Button,
-  Stack,
-  Divider,
-} from "@mui/material";
-
-import {
-  Store,
-  CheckCircle,
-} from "@mui/icons-material";
-
-import api from "../../services/api";
-
-// =====================================================
-// TYPES
-// =====================================================
-
-type Supplier = {
-  id: string;
-  name: string;
-  status: string;
-};
+import { Supplier } from "@/types/dashboard";
 
 type Props = {
   open: boolean;
-
-  onClose: () => void;
-
-  orderId: string;
-
   suppliers: Supplier[];
-
-  onAssigned?: () => void;
+  onClose: () => void;
+  onAssign: (supplierId: string) => void;
 };
-
-// =====================================================
-// STATUS COLORS
-// =====================================================
-
-const getStatusColor = (
-  status: string
-) => {
-
-  switch (status) {
-
-    case "available":
-      return "#22C55E";
-
-    case "busy":
-      return "#EAB308";
-
-    case "closed":
-      return "#EF4444";
-
-    default:
-      return "#64748B";
-  }
-};
-
-// =====================================================
-// STATUS LABEL
-// =====================================================
-
-const getStatusLabel = (
-  status: string
-) => {
-
-  switch (status) {
-
-    case "available":
-      return "🟢 Available";
-
-    case "busy":
-      return "🟡 Busy";
-
-    case "closed":
-      return "🔴 Closed";
-
-    default:
-      return status;
-  }
-};
-
-// =====================================================
-// COMPONENT
-// =====================================================
 
 export default function AssignSupplierModal({
   open,
-  onClose,
-  orderId,
   suppliers,
-  onAssigned,
+  onClose,
+  onAssign,
 }: Props) {
-
-  // =====================================================
-  // ASSIGN SUPPLIER
-  // =====================================================
-
-  const handleAssignSupplier =
-    async (
-      supplierId: string
-    ) => {
-
-      try {
-
-        await api.post(
-          `/api/Orders/${orderId}/assign-supplier?supplierId=${supplierId}`
-        );
-
-        if (onAssigned) {
-          onAssigned();
-        }
-
-        onClose();
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "Failed to assign supplier"
-        );
-      }
-    };
-
-  // =====================================================
-  // UI
-  // =====================================================
+  if (!open) return null;
 
   return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+      <div className="w-full max-w-2xl rounded-3xl border border-white/10 bg-[#111827] p-6">
 
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth
-      maxWidth="sm"
-      PaperProps={{
-        sx: {
-          backgroundColor: "#0F172A",
-          border:
-            "1px solid #1E293B",
-          borderRadius: "20px",
-          color: "white",
-        },
-      }}
-    >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-white">
+            Assign Supplier
+          </h2>
 
-      {/* ========================================= */}
-      {/* HEADER */}
-      {/* ========================================= */}
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-white"
+          >
+            ✕
+          </button>
+        </div>
 
-      <DialogTitle>
-
-        <Box
-          display="flex"
-          alignItems="center"
-          gap={2}
-        >
-
-          <Store
-            sx={{
-              color: "#3B82F6",
-            }}
-          />
-
-          <Box>
-
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-            >
-              Assign Supplier
-            </Typography>
-
-            <Typography
-              variant="body2"
-              color="#94A3B8"
-            >
-              Select supplier for this order
-            </Typography>
-
-          </Box>
-
-        </Box>
-
-      </DialogTitle>
-
-      {/* ========================================= */}
-      {/* CONTENT */}
-      {/* ========================================= */}
-
-      <DialogContent>
-
-        <Stack spacing={2}>
-
-          {suppliers.map(
-            (supplier) => (
-
-              <Box
+        {/* Supplier List */}
+        <div className="space-y-4 max-h-[500px] overflow-y-auto">
+          {suppliers.length === 0 ? (
+            <div className="rounded-2xl border border-white/5 bg-[#0B0F14] p-6 text-center">
+              <p className="text-gray-400">
+                No available suppliers.
+              </p>
+            </div>
+          ) : (
+            suppliers.map((supplier) => (
+              <div
                 key={supplier.id}
-                sx={{
-                  border:
-                    "1px solid #1E293B",
-
-                  borderRadius: "16px",
-
-                  p: 2,
-
-                  backgroundColor:
-                    "#111827",
-
-                  transition:
-                    "all 0.3s ease",
-
-                  "&:hover": {
-                    borderColor:
-                      "#3B82F6",
-
-                    transform:
-                      "translateY(-2px)",
-                  },
-                }}
+                className="rounded-2xl border border-white/5 bg-[#0B0F14] p-5"
               >
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-                {/* =============================== */}
-                {/* SUPPLIER INFO */}
-                {/* =============================== */}
-
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-
-                  <Box>
-
-                    <Typography
-                      fontWeight="bold"
-                      color="white"
-                    >
+                  {/* Supplier Details */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">
                       {supplier.name}
-                    </Typography>
+                    </h3>
 
-                    <Chip
-                      label={getStatusLabel(
-                        supplier.status
-                      )}
+                    <div className="mt-3 space-y-1">
+                      <p className="text-sm text-gray-400">
+                        Availability:
+                        <span className="ml-2 text-green-400">
+                          {supplier.availability}
+                        </span>
+                      </p>
 
-                      sx={{
-                        mt: 1,
+                      <p className="text-sm text-gray-400">
+                        Territory:
+                        <span className="ml-2 text-white">
+                          {supplier.territory}
+                        </span>
+                      </p>
 
-                        backgroundColor:
-                          getStatusColor(
-                            supplier.status
-                          ),
+                      <p className="text-sm text-gray-400">
+                        Current Workload:
+                        <span className="ml-2 text-white">
+                          {supplier.currentWorkload}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
 
-                        color: "white",
-
-                        fontWeight:
-                          "bold",
-                      }}
-                    />
-
-                  </Box>
-
-                  {/* =========================== */}
-                  {/* ASSIGN BUTTON */}
-                  {/* =========================== */}
-
-                  <Button
-                    variant="contained"
-
-                    startIcon={
-                      <CheckCircle />
-                    }
-
-                    disabled={
-                      supplier.status !==
-                      "available"
-                    }
-
+                  {/* Assign Button */}
+                  <button
                     onClick={() =>
-                      handleAssignSupplier(
-                        supplier.id
+                      onAssign(
+                        supplier.id.toString()
                       )
                     }
-
-                    sx={{
-                      backgroundColor:
-                        "#2563EB",
-
-                      borderRadius:
-                        "12px",
-
-                      fontWeight:
-                        "bold",
-
-                      px: 3,
-
-                      "&:hover": {
-                        backgroundColor:
-                          "#1D4ED8",
-                      },
-                    }}
+                    className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-3 rounded-xl transition-all"
                   >
                     Assign
-                  </Button>
-
-                </Box>
-
-              </Box>
-            )
+                  </button>
+                </div>
+              </div>
+            ))
           )}
+        </div>
 
-        </Stack>
-
-        {/* ========================================= */}
-        {/* FOOTER NOTE */}
-        {/* ========================================= */}
-
-        <Divider
-          sx={{
-            my: 3,
-            borderColor: "#334155",
-          }}
-        />
-
-        <Typography
-          variant="body2"
-          color="#94A3B8"
-        >
-          ⚠️ Only available suppliers
-          can be assigned to orders.
-        </Typography>
-
-      </DialogContent>
-
-    </Dialog>
+        {/* Footer */}
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={onClose}
+            className="rounded-xl border border-white/10 px-5 py-3 text-gray-300 hover:bg-white/5"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

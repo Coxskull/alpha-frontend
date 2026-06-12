@@ -26,20 +26,27 @@ export type Order = {
 };
 
 export interface Driver {
-  id: number;
+  id: string;
 
   fullName: string;
 
-  vehicleType: string;
+  availability: string;
 
-  status: string;
+  territory: string;
+
+  activeJobs: number;
 }
 
 export interface Supplier {
-  id: number;
-  businessName?: string;
-  name?: string;
-  status: string;
+  id: string;
+
+  name: string;
+
+  availability: string;
+
+  territory: string;
+
+  currentWorkload: number;
 }
 
 export interface DashboardStats {
