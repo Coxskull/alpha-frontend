@@ -12,7 +12,6 @@ type Props = {
 export default function AssignDriverModal({
   open,
   drivers,
-  onClose,
   onAssign,
 }: Props) {
   if (!open) return null;
