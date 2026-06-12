@@ -323,8 +323,18 @@ xl:grid-cols-4 gap-5 mt-6">
         order.id
       )
     }
-    disabled={actionLoading === order.id}
-    className="bg-[#111827] hover:bg-[#1F2937] border border-white/5 text-white px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
+    disabled={
+  actionLoading === order.id ||
+  order.status !== "supplier_assigned"
+}
+    className={`
+px-5 py-2.5 rounded-xl transition-all
+${
+  order.status !== "supplier_assigned"
+    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+    : "bg-[#111827] hover:bg-[#1F2937] border border-white/5 text-white"
+}
+`}
   >
     {actionLoading === order.id
       ? "Assigning..."
@@ -340,8 +350,18 @@ xl:grid-cols-4 gap-5 mt-6">
         order.id
       )
     }
-    disabled={actionLoading === order.id}
-    className="bg-[#111827] hover:bg-[#1F2937] border border-white/5 text-white px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
+    disabled={
+  actionLoading === order.id ||
+  order.status !== "pending"
+}
+    className={`
+px-5 py-2.5 rounded-xl transition-all
+${
+  order.status !== "pending"
+    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+    : "bg-[#111827] hover:bg-[#1F2937] border border-white/5 text-white"
+}
+`}
   >
     {actionLoading === order.id
       ? "Assigning..."
@@ -356,8 +376,18 @@ xl:grid-cols-4 gap-5 mt-6">
         order.id
       )
     }
-    disabled={actionLoading === order.id}
-    className="bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-400 px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
+    disabled={
+  actionLoading === order.id ||
+  order.status !== "driver_assigned"
+}
+    className={`
+px-5 py-2.5 rounded-xl transition-all
+${
+  order.status !== "driver_assigned"
+    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+    : "bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-400"
+}
+`}
   >
     picked_up
   </button>
@@ -370,8 +400,18 @@ xl:grid-cols-4 gap-5 mt-6">
         order.id
       )
     }
-    disabled={actionLoading === order.id}
-    className="bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 text-orange-400 px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
+    disabled={
+  actionLoading === order.id ||
+  order.status !== "picked_up"
+}
+    className={`
+px-5 py-2.5 rounded-xl transition-all
+${
+  order.status !== "picked_up"
+    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+    : "bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 text-orange-400"
+}
+`}
   >
     en_route
   </button>
@@ -384,8 +424,18 @@ xl:grid-cols-4 gap-5 mt-6">
         order.id
       )
     }
-    disabled={actionLoading === order.id}
-    className="bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 text-green-400 px-5 py-2.5 rounded-xl transition-all disabled:opacity-50"
+    disabled={
+  actionLoading === order.id ||
+  order.status !== "en_route"
+}
+    className={`
+px-5 py-2.5 rounded-xl transition-all
+${
+  order.status !== "en_route"
+    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+    : "bg-green-500/10 hover:bg-green-500/20 border border-green-500/20 text-green-400"
+}
+`}
   >
     delivered
   </button>
