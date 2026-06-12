@@ -119,9 +119,13 @@ const handleAction = async (
                   Status
                 </p>
 
-                <p className="text-sm font-semibold text-white mt-1">
-                  {order.status}
-                </p>
+               <p className="text-sm font-semibold text-white mt-1">
+  {order.status}
+</p>
+
+<p className="text-xs text-red-400 mt-1">
+  RAW STATUS: {JSON.stringify(order.status)}
+</p>
               </div>
             </div>
           </div>
@@ -172,55 +176,62 @@ const handleAction = async (
           </div>
 
           {/* Timeline */}
-          <div className="mt-8">
-            <OrderTimeline
-  steps={[
-    {
-      label: "Pending",
-      completed: true,
-    },
-    {
-      label: "Supplier",
-      completed: [
-        "supplier_assigned",
-        "driver_assigned",
-        "picked_up",
-        "en_route",
-        "delivered",
-      ].includes(order.status),
-    },
-    {
-      label: "Driver",
-      completed: [
-        "driver_assigned",
-        "picked_up",
-        "en_route",
-        "delivered",
-      ].includes(order.status),
-    },
-    {
-      label: "Pickup",
-      completed: [
-        "picked_up",
-        "en_route",
-        "delivered",
-      ].includes(order.status),
-    },
-    {
-      label: "en_route",
-      completed: [
-        "en_route",
-        "delivered",
-      ].includes(order.status),
-    },
-    {
-      label: "delivered",
-      completed:
-        order.status === "delivered",
-    },
-  ]}
-/>
-          </div>
+<div className="mt-8">
+  <div className="mb-3 text-xs text-red-400">
+    DEBUG STATUS: {order.status}
+  </div>
+
+  {(() => {
+    const currentStep =
+      {
+        pending: 0,
+        supplier_assigned: 1,
+        driver_assigned: 2,
+        picked_up: 3,
+        en_route: 4,
+        delivered: 5,
+      }[order.status] ?? 0;
+
+    console.log(
+      "ORDER STATUS:",
+      order.orderNumber,
+      order.status,
+      "CURRENT STEP:",
+      currentStep
+    );
+
+    return (
+      <OrderTimeline
+        steps={[
+          {
+            label: "Pending",
+            completed: currentStep >= 0,
+          },
+          {
+            label: "Supplier",
+            completed: currentStep >= 1,
+          },
+          {
+            label: "Driver",
+            completed: currentStep >= 2,
+          },
+          {
+            label: "Pickup",
+            completed: currentStep >= 3,
+          },
+          {
+            label: "En Route",
+            completed: currentStep >= 4,
+          },
+          {
+            label: "Delivered",
+            completed: currentStep >= 5,
+          },
+        ]}
+      />
+    );
+  })()}
+</div>
           {/* Actions */}
 <div className="flex flex-wrap gap-3 mt-8">
   {/* View */}
