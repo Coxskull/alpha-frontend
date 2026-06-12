@@ -19,6 +19,8 @@ export default function ActiveOrdersTable() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [popupMessage, setPopupMessage] =
+  useState<string | null>(null);
 const [actionLoading, setActionLoading] =
   useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] =
@@ -69,11 +71,43 @@ const handleAction = async (
     await action();
 
     await fetchOrders();
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setActionLoading(null);
+  } catch (error: unknown) {
+  console.error(error);
+
+  const axiosError = error as {
+    response?: {
+      data?: string | { message?: string };
+    };
+    message?: string;
+  };
+
+  const errorMessage =
+    typeof axiosError.response?.data === "string"
+      ? axiosError.response.data
+      : axiosError.response?.data?.message ||
+        axiosError.message ||
+        "Action failed";
+
+  if (
+    errorMessage.includes(
+      "No available drivers"
+    )
+  ) {
+    setPopupMessage(
+      "🚚 No drivers are currently available."
+    );
+  } else if (
+    errorMessage.includes(
+      "No available suppliers"
+    )
+  ) {
+    setPopupMessage(
+      "🏭 No suppliers are currently available."
+    );
+  } else {
+    setPopupMessage(errorMessage);
   }
+}
 };
     return (
   <div className="space-y-5">
@@ -121,10 +155,6 @@ const handleAction = async (
 
                <p className="text-sm font-semibold text-white mt-1">
   {order.status}
-</p>
-
-<p className="text-xs text-red-400 mt-1">
-  RAW STATUS: {JSON.stringify(order.status)}
 </p>
               </div>
             </div>
@@ -177,9 +207,6 @@ const handleAction = async (
 
           {/* Timeline */}
 <div className="mt-8">
-  <div className="mb-3 text-xs text-red-400">
-    DEBUG STATUS: {order.status}
-  </div>
 
   {(() => {
     const currentStep =
@@ -333,6 +360,30 @@ const handleAction = async (
   onClose={() => setShowAddModal(false)}
   onCreated={fetchOrders}
 />
+{popupMessage && (
+  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div className="bg-[#111827] border border-white/10 rounded-2xl p-6 w-full max-w-md">
+      <h3 className="text-xl font-bold text-white mb-3">
+        Assignment Failed
+      </h3>
+
+      <p className="text-gray-300">
+        {popupMessage}
+      </p>
+
+      <div className="flex justify-end mt-6">
+        <button
+          onClick={() =>
+            setPopupMessage(null)
+          }
+          className="bg-green-500 hover:bg-green-400 text-black font-semibold px-5 py-2 rounded-xl"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
