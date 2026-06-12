@@ -28,7 +28,7 @@ export default function Topbar({
         "
       >
         {/* Left */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 min-w-0">
           {/* Mobile Menu */}
           <button
             onClick={onMenuClick}
@@ -51,14 +51,15 @@ export default function Topbar({
 
           <div>
             <h2
-              className="
-                text-lg
-                sm:text-xl
-                lg:text-2xl
-                font-bold
-                text-white
-              "
-            >
+  className="
+    text-lg
+    sm:text-xl
+    lg:text-2xl
+    font-bold
+    text-white
+    truncate
+  "
+>
               Alpha Mission Control
             </h2>
 
@@ -114,7 +115,18 @@ export default function Topbar({
           </button>
 
           {/* Profile */}
-          <div className="flex items-center gap-3 bg-[#1F2937] border border-white/5 px-3 py-2 rounded-2xl">
+          <div className="
+flex
+items-center
+gap-2
+bg-[#1F2937]
+border
+border-white/5
+px-2
+md:px-3
+py-2
+rounded-2xl
+">
             <div className="h-10 w-10 rounded-xl bg-green-500 flex items-center justify-center text-black font-bold">
               D
             </div>
