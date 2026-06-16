@@ -691,6 +691,7 @@ ${
       <AssignDriverModal
   open={driverModalOpen}
   drivers={drivers}
+  territory={selectedOrder?.zone ?? ""}
   onClose={() => setDriverModalOpen(false)}
   onAssign={assignSelectedDriver}
 />
@@ -698,6 +699,7 @@ ${
 <AssignSupplierModal
   open={supplierModalOpen}
   suppliers={suppliers}
+  territory={selectedOrder?.zone ?? ""}
   onClose={() => setSupplierModalOpen(false)}
   onAssign={assignSelectedSupplier}
 />

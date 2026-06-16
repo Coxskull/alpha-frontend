@@ -5,6 +5,7 @@ import { Driver } from "@/types/dashboard";
 type Props = {
   open: boolean;
   drivers: Driver[];
+  territory: string;
   onClose: () => void;
   onAssign: (driverId: string) => void;
 };
@@ -12,16 +13,35 @@ type Props = {
 export default function AssignDriverModal({
   open,
   drivers,
+  territory,
   onClose,
   onAssign,
 }: Props) {
   if (!open) return null;
 
-  const sortedDrivers = [...drivers].sort(
-  (a, b) =>
-    (a.activeJobs || 0) -
-    (b.activeJobs || 0)
-);
+ const sortedDrivers = drivers
+  .filter(
+    (d) =>
+      d.availability?.toLowerCase() ===
+      "available"
+  )
+  .map((driver) => {
+    const territoryMatch =
+      driver.territory?.toLowerCase() ===
+      territory.toLowerCase();
+
+    const score =
+      (territoryMatch ? 100 : 0) +
+      (driver.responseRate ?? 100) -
+      (driver.activeJobs ?? 0) * 5;
+
+    return {
+      ...driver,
+      territoryMatch,
+      score,
+    };
+  })
+  .sort((a, b) => b.score - a.score);
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
@@ -80,7 +100,19 @@ export default function AssignDriverModal({
                   <p className="text-white font-semibold text-lg">
                     {driver.fullName}
                   </p>
+<div className="flex gap-2 mt-2 flex-wrap">
 
+  {driver.territoryMatch && (
+    <span className="px-2 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+      Territory Match
+    </span>
+  )}
+
+  <span className="px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">
+      Score {driver.score}
+  </span>
+
+</div>
                   <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
 
                     <p className="text-gray-400 text-sm">

@@ -5,6 +5,7 @@ import { Supplier } from "@/types/dashboard";
 type Props = {
   open: boolean;
   suppliers: Supplier[];
+  territory: string;
   onClose: () => void;
   onAssign: (supplierId: string) => void;
 };
@@ -12,14 +13,35 @@ type Props = {
 export default function AssignSupplierModal({
   open,
   suppliers,
+  territory,
   onClose,
   onAssign,
 }: Props) {
   if (!open) return null;
 
-  const sortedSuppliers = [...suppliers].sort(
-    (a, b) => a.currentWorkload - b.currentWorkload
-  );
+ const scoredSuppliers = suppliers
+  .filter(
+    (s) =>
+      s.availability?.toLowerCase() ===
+      "available"
+  )
+  .map((supplier) => {
+    const territoryMatch =
+      supplier.territory?.toLowerCase() ===
+      territory.toLowerCase();
+
+    const score =
+      (territoryMatch ? 100 : 0) +
+      (supplier.responseRate ?? 100) -
+      supplier.currentWorkload * 5;
+
+    return {
+      ...supplier,
+      territoryMatch,
+      score,
+    };
+  })
+  .sort((a, b) => b.score - a.score);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
@@ -47,14 +69,14 @@ export default function AssignSupplierModal({
 
         {/* Supplier List */}
         <div className="space-y-4 max-h-[550px] overflow-y-auto">
-          {sortedSuppliers.length === 0 ? (
+          {scoredSuppliers.length === 0 ? (
             <div className="rounded-2xl border border-white/5 bg-[#0B0F14] p-6 text-center">
               <p className="text-gray-400">
                 No available suppliers.
               </p>
             </div>
           ) : (
-            sortedSuppliers.map((supplier, index) => (
+            scoredSuppliers.map((supplier, index) => (
               <div
                 key={supplier.id}
                 className={`
@@ -81,6 +103,19 @@ export default function AssignSupplierModal({
                     <h3 className="text-lg font-semibold text-white">
                       {supplier.name}
                     </h3>
+                    <div className="flex gap-2 mt-2 flex-wrap">
+
+  {supplier.territoryMatch && (
+    <span className="px-2 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+      Territory Match
+    </span>
+  )}
+
+  <span className="px-2 py-1 rounded-full text-xs bg-blue-500/20 text-blue-400">
+    Score {supplier.score}
+  </span>
+
+</div>
 
                     <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
 
