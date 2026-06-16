@@ -17,15 +17,25 @@ export default function AssignSupplierModal({
 }: Props) {
   if (!open) return null;
 
+  const sortedSuppliers = [...suppliers].sort(
+    (a, b) => a.currentWorkload - b.currentWorkload
+  );
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-2xl rounded-3xl border border-white/10 bg-[#111827] p-6">
+      <div className="w-full max-w-3xl rounded-3xl border border-white/10 bg-[#111827] p-6">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">
-            Assign Supplier
-          </h2>
+          <div>
+            <h2 className="text-xl font-bold text-white">
+              Assign Supplier
+            </h2>
+
+            <p className="text-sm text-gray-400">
+              Territory-aware supplier recommendations
+            </p>
+          </div>
 
           <button
             onClick={onClose}
@@ -36,28 +46,44 @@ export default function AssignSupplierModal({
         </div>
 
         {/* Supplier List */}
-        <div className="space-y-4 max-h-[500px] overflow-y-auto">
-          {suppliers.length === 0 ? (
+        <div className="space-y-4 max-h-[550px] overflow-y-auto">
+          {sortedSuppliers.length === 0 ? (
             <div className="rounded-2xl border border-white/5 bg-[#0B0F14] p-6 text-center">
               <p className="text-gray-400">
                 No available suppliers.
               </p>
             </div>
           ) : (
-            suppliers.map((supplier) => (
+            sortedSuppliers.map((supplier, index) => (
               <div
                 key={supplier.id}
-                className="rounded-2xl border border-white/5 bg-[#0B0F14] p-5"
+                className={`
+                  rounded-2xl
+                  border
+                  p-5
+                  ${
+                    index === 0
+                      ? "border-green-500/40 bg-green-500/5"
+                      : "border-white/5 bg-[#0B0F14]"
+                  }
+                `}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-                  {/* Supplier Details */}
                   <div>
+
+                    {index === 0 && (
+                      <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">
+                        ⭐ Recommended Match
+                      </div>
+                    )}
+
                     <h3 className="text-lg font-semibold text-white">
                       {supplier.name}
                     </h3>
 
-                    <div className="mt-3 space-y-1">
+                    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+
                       <p className="text-sm text-gray-400">
                         Availability:
                         <span className="ml-2 text-green-400">
@@ -78,10 +104,17 @@ export default function AssignSupplierModal({
                           {supplier.currentWorkload}
                         </span>
                       </p>
+
+                      <p className="text-sm text-gray-400">
+                        Response Rate:
+                        <span className="ml-2 text-white">
+                          {supplier.responseRate ?? 100}%
+                        </span>
+                      </p>
+
                     </div>
                   </div>
 
-                  {/* Assign Button */}
                   <button
                     onClick={() =>
                       onAssign(
@@ -92,13 +125,13 @@ export default function AssignSupplierModal({
                   >
                     Assign
                   </button>
+
                 </div>
               </div>
             ))
           )}
         </div>
 
-        {/* Footer */}
         <div className="mt-6 flex justify-end">
           <button
             onClick={onClose}
@@ -107,6 +140,7 @@ export default function AssignSupplierModal({
             Close
           </button>
         </div>
+
       </div>
     </div>
   );
