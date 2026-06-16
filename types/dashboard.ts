@@ -6,6 +6,7 @@ export type OrderStatus =
   | "driver_assigned"
   | "picked_up"
   | "en_route"
+  | "cancelled"
   | "delivered";
 
 export type Order = {

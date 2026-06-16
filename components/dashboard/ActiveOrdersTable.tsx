@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import OrderDetailsModal from "../orders/OrderDetailsModal";
 import api from "@/services/api";
 import AddOrderModal from "../orders/AddOrderModal";
-import { Driver, Order, Supplier } from "@/types/dashboard";
+import { Driver, Order, OrderStatus, Supplier } from "@/types/dashboard";
 import AssignDriverModal from "../orders/AssignDriverModal";
 import AssignSupplierModal from "../orders/AssignSupplierModal";
-import StatusChip, { OrderStatus } from "../StatusChip";
+import StatusChip from "../StatusChip";
 import OrderTimeline from "../orders/OrderTimeline";
 import {
   markPickedUp,
