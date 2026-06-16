@@ -323,7 +323,13 @@ const filteredOrders = orders.filter(
           <option value="supplier_assigned">
             Supplier Assigned
           </option>
+<option value="supplier_accepted">
+  Supplier Accepted
+</option>
 
+<option value="ready_for_pickup">
+  Ready For Pickup
+</option>
           <option value="driver_assigned">
             Driver Assigned
           </option>
@@ -489,15 +495,17 @@ xl:grid-cols-4 gap-5 mt-6">
 <div className="mt-8">
 
   {(() => {
-    const currentStep =
-      {
-        pending: 0,
-        supplier_assigned: 1,
-        driver_assigned: 2,
-        picked_up: 3,
-        en_route: 4,
-        delivered: 5,
-      }[order.status] ?? 0;
+   const currentStep = {
+  pending: 0,
+  supplier_assigned: 1,
+  supplier_accepted: 2,
+  ready_for_pickup: 3,
+  driver_assigned: 4,
+  picked_up: 5,
+  en_route: 6,
+  delivered: 7,
+  cancelled: -1,
+}[order.status] ?? 0;
 
     console.log(
       "ORDER STATUS:",
@@ -510,31 +518,15 @@ xl:grid-cols-4 gap-5 mt-6">
     return (
       <OrderTimeline
         steps={[
-          {
-            label: "Pending",
-            completed: currentStep >= 0,
-          },
-          {
-            label: "Supplier",
-            completed: currentStep >= 1,
-          },
-          {
-            label: "Driver",
-            completed: currentStep >= 2,
-          },
-          {
-            label: "Pickup",
-            completed: currentStep >= 3,
-          },
-          {
-            label: "En Route",
-            completed: currentStep >= 4,
-          },
-          {
-            label: "Delivered",
-            completed: currentStep >= 5,
-          },
-        ]}
+  { label: "Pending", completed: currentStep >= 0 },
+  { label: "Assigned", completed: currentStep >= 1 },
+  { label: "Accepted", completed: currentStep >= 2 },
+  { label: "Ready", completed: currentStep >= 3 },
+  { label: "Driver", completed: currentStep >= 4 },
+  { label: "Pickup", completed: currentStep >= 5 },
+  { label: "Route", completed: currentStep >= 6 },
+  { label: "Delivered", completed: currentStep >= 7 },
+]}
       />
     );
   })()}
@@ -575,12 +567,12 @@ xl:grid-cols-4 gap-5 mt-6">
 }
     disabled={
   actionLoading === order.id ||
-  order.status !== "supplier_assigned"
+  order.status !== "ready_for_pickup"
 }
     className={`
 px-5 py-2.5 rounded-xl transition-all
 ${
-  order.status !== "supplier_assigned"
+  order.status !== "ready_for_pickup"
     ? "bg-gray-700 text-gray-500 cursor-not-allowed"
     : "bg-[#111827] hover:bg-[#1F2937] border border-white/5 text-white"
 }

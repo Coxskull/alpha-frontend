@@ -1,6 +1,8 @@
 export type OrderStatus =
   | "pending"
   | "supplier_assigned"
+  | "supplier_accepted"
+  | "ready_for_pickup"
   | "driver_assigned"
   | "picked_up"
   | "en_route"
